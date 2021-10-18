@@ -1,0 +1,130 @@
+.recruitee-jobs-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    font-size: 0.75em;
+    width: 100%;
+    margin: 0 !important;
+    max-width: 100% !important;
+}
+
+.recruitee-jobs-container .recruitee-jobs-errors-container {
+    width: 100%;
+    padding: 2rem 1rem;
+    margin: 10px;
+    background: #ffafaf;
+    text-align: left;
+    border: #760000 1px solid;
+    border-radius: 2rem;
+}
+
+.recruitee-jobs-container .recruitee-jobs-errors {
+    width: 100%;
+    color: #760000;
+}
+
+.recruitee-jobs-container article.recruitee-job {
+    flex: 0 0 calc(33% - 20px);
+    border-radius: 2rem;
+    padding: 2rem;
+    margin: 10px;
+    background: #fff;
+    color: #000;
+    text-align: left;
+}
+
+.recruitee-jobs-container article.recruitee-job h3 {
+    margin-bottom: 2rem;
+}
+
+.recruitee-jobs-container article.recruitee-job figure {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    align-content: center;
+}
+
+.recruitee-jobs-container article.recruitee-job figure figcaption {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    align-content: flex-start;
+    text-align: left;
+    margin: 0;
+}
+
+.recruitee-jobs-container article.recruitee-job figure figcaption p {
+    margin-bottom: 2rem;
+}
+
+.recruitee-jobs-container a {
+    color: #1999E3;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.recruitee-jobs-container a:hover {
+    color: #131c24;
+    border-color: #131c24;
+}
+
+.recruitee-jobs-container .recruitee-read-more {
+    display: flex;
+    margin-top: 20px;
+    justify-content: flex-end;
+    align-self: flex-end;
+}
+
+.recruitee-jobs-container .recruitee-read-more .recruitee-button {
+    display: inline-flex;
+    padding: 10px;
+    text-align: center;
+    font-weight: bold;
+    line-height: 25px;
+    text-decoration: none;
+    color: #fff;
+    white-space: normal;
+    border: 2px solid #1999E3;
+    background-color: #1999E3;
+    border-radius: 4px;
+    justify-content: center;
+    align-self: flex-end;
+    cursor: pointer;
+    max-width: 100%;
+    transition: color .2s ease, border-color .2s ease, background-color .2s ease, box-shadow .2s ease;
+}
+
+.recruitee-jobs-container a.recruitee-button {
+    border-bottom: 2px solid #fff;
+}
+
+.recruitee-jobs-container a.recruitee-button:hover {
+    border-bottom: 2px solid #131c24;
+}
+
+.recruitee-jobs-container a.recruitee-button:hover {
+    color: #fff;
+    border: 2px solid #1999E3;
+    background-color: #1999E3;
+    text-decoration: underline;
+}
+
+.recruitee-jobs-container a.recruitee-button[href]:focus {
+    color: #fff;
+    border: 2px solid #1999E3;
+    background-color: #1999E3;
+    text-decoration: underline;
+}
+
+@media screen and (max-width: 1024px) {
+    .recruitee-jobs-container article.recruitee-job {
+        flex: 0 0 calc(50% - 20px);
+    }
+}
+
+@media screen and (max-width: 790px) {
+    .recruitee-jobs-container article.recruitee-job {
+        flex: 0 0 100%;
+    }
+}

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="SshConfigs">
+    <configs>
+      <sshConfig host="wordpress.jordin.eu" id="bc5c81b1-6120-40a1-8f3d-d7bba7974f5e" keyPath="C:\Users\pasca\.ssh\id_rsa" port="22" customName="WordPress-Testumgebung" nameFormat="CUSTOM" username="wordpress-o6k6f">
+        <option name="customName" value="WordPress-Testumgebung" />
+      </sshConfig>
+    </configs>
+  </component>
+</project>
