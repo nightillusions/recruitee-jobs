@@ -10,7 +10,7 @@
  *
  * @wordpress-plugin
  * Plugin Name:       Jobs from Recruitee
- * Plugin URI:        https://jordin.eu/plugin/recruitee-jobs
+ * Plugin URI:        https://wordpress.org/plugins/jobs-from-recruitee/
  * Description:       Easily display published jobs from Recruitee anywhere with shortcode.
  * Version:           1.0
  * Requires at least: 5.8
