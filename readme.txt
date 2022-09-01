@@ -47,7 +47,8 @@ Or the text color of the title:
 
 == Screenshots ==
 
-1. Easily display all public jobs from your Recruitee
+1. Easily place the shortcode anywhere on you site
+2. Easily display all public jobs from your Recruitee
 
 == Changelog ==
 
