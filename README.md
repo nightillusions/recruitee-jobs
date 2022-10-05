@@ -5,7 +5,7 @@ Donate link: https://jordin.eu
 Tags: jobs, recruitee, shortcode
 Requires at least: 5.8
 Tested up to: 6.0.2
-Stable tag: 1.0
+Stable tag: 1.1
 Requires PHP: 7.4
 License: GPLv3 or later License URI: https://www.gnu.org/licenses/gpl-3.0.txt
 
@@ -54,6 +54,10 @@ Or the text color of the title:
 2. Easily display all public jobs from your Recruitee
 
 ## Changelog
+
+### 1.1
+
+- Fix: Uncaught TypeError when there is a problem with Careers Site subdomain in the shortcode or no jobs listed.
 
 ### 1.0
 
