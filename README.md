@@ -32,6 +32,10 @@ files, you can embed your job offers anywhere.
 
 ### How to use the shortcode?
 
+First you have to replace the company tag value by your Recruitee Careers Site subdomain.
+The scheme looks like this: https://yourcompany.recruitee.com
+Where `yourcompany` is the subdomain. You can usually find this in your Recruitee administration interface.
+
 In the visual editor you can simply add a new Shortcode block by clicking on the [+] icon.
 Then search for `Shortcode` and click on it. Next you add your own recruitee shortcode like `[recruitee-jobs company="yourcompany"]`
 in the input field. That´s it! :)

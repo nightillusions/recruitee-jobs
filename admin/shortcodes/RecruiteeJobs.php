@@ -142,7 +142,10 @@ class RecruiteeJobs
 
         foreach ($this->tags as $tag) {
             $response = wp_remote_get("$apiURL&tag=$tag");
-            array_push($jobs, ...json_decode(wp_remote_retrieve_body($response), true)['offers']);
+            $json = json_decode(wp_remote_retrieve_body($response), true);
+            if($json && array_key_exists("offers", $json)){
+              array_push($jobs, ...$json['offers']);
+            }
         }
 
         return $jobs;
