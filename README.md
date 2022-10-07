@@ -19,7 +19,7 @@ files, you can embed your job offers anywhere.
 
 ## Features
 
-- `departments="UX"` Department filtering: Show only jobs from a specific department
+- `department="UX"` Department filtering: Show only jobs from a specific department
 - `tags="Master,Thesis"` Tag filtering: show only jobs with a specific tag
 - `url="https://example.com/jobs"` Custom Links: Set the URL to which the jobs link to
 - `language="de"` Language selection: Choose the language of the displayed texts
@@ -54,6 +54,11 @@ Or the text color of the title:
 2. Easily display all public jobs from your Recruitee
 
 ## Changelog
+
+### 1.2
+
+- Fix: Spaces in department filter caused problems with job retrieval.
+- Fix: If no language is specified, the default text is now specified.
 
 ### 1.1
 
