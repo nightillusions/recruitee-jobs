@@ -12,6 +12,8 @@ class RecruiteeJobs
   protected bool $hasPreviewText;
   protected string $more;
   protected bool $raw;
+  protected bool $show_tags;
+  protected bool $show_location;
   protected string $source;
   protected array $allowed_html = [
     'a' => [
@@ -44,6 +46,8 @@ class RecruiteeJobs
       'preview_size' => '55',
       'more' => '...',
       'raw' => false,
+      'show_tags' => false,
+      'show_location' => false,
       'source' => '',
     ], $shortcode_attributes);
 
@@ -55,6 +59,8 @@ class RecruiteeJobs
     $preview_size = (int)esc_attr($attributes['preview_size']);
     $more = esc_attr($attributes['more']);
     $raw = boolval(esc_attr($attributes['raw']));
+    $show_tags = boolval(esc_attr($attributes['show_tags']));
+    $show_location = boolval(esc_attr($attributes['show_location']));
     $source = esc_attr($attributes['source']);
 
     $this->tags = $tags;
@@ -67,6 +73,8 @@ class RecruiteeJobs
     $this->hasPreviewText = boolval($this->preview_size);
     $this->more = $more;
     $this->raw = $raw;
+    $this->show_tags = $show_tags;
+    $this->show_location = $show_location;
     $this->source = $source;
     $this->external_job_url = empty($jobs_url) ? $this->recruitee_url . '/o' : $jobs_url;
   }
@@ -93,6 +101,20 @@ class RecruiteeJobs
       echo "<a href='" . esc_url($this->getJobURL($job['slug'])) . "' target='_self'>";
       echo "<h3>" . esc_html($job['title']) . "</h3>";
       echo "</a>";
+      if ($this->show_location || $this->show_tags) {
+        echo "<div class='recruitee-meta'>";
+        if ($this->show_location && $job['location']) {
+          echo "<div class='recruitee-location'>";
+          echo wp_kses(esc_html($job['location']), $this->allowed_html);
+          echo "</div>";
+        }
+        if ($this->show_tags && $job['tags']) {
+          echo "<div class='recruitee-tags'>";
+          echo wp_kses(esc_html(implode(', ', $job['tags'])), $this->allowed_html);
+          echo "</div>";
+        }
+        echo "</div>";
+      }
       if ($this->hasPreviewText) {
         echo wp_kses($this->getTeaserText($job), $this->allowed_html);
       }

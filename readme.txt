@@ -5,7 +5,7 @@ Donate link: https://jordin.eu
 Tags: recruitee, jobs, career, careers page, job lists, job listing, job board, shortcode, page, pages, posts, work
 Requires at least: 5.8
 Tested up to: 6.0.2
-Stable tag: 1.2
+Stable tag: 1.3
 Requires PHP: 7.4
 License: GPLv3 or later License URI: https://www.gnu.org/licenses/gpl-3.0.txt
 
@@ -45,6 +45,12 @@ It's never been easier to display your public Recruitee jobs on your WordPress s
 -   **Track where your candidates come from:** You can simply add a source to track where the candidates applying for your jobs come from 
     
     `source="yourcompany.tld"`
+-   **Display location:** Display the job location before the description 
+    
+    `show_location="1"`
+-   **Display tags:** Display the job tags before the description 
+    
+    `show_tags="1"`
 
 == Frequently Asked Questions ==
 
@@ -81,18 +87,24 @@ Or the text color of the title:
 
 == Changelog ==
 
+= 1.3 =
+
+- Feature: Optional display of the tags in the job listing
+- Feature: Optional display of the location in the job listing
+- Styling: Reduction of default spacing of heading and paragraphs
+
 = 1.2 =
 
-* Fix: Spaces in department filter caused problems with job retrieval.
-* Fix: If no language is specified, the default text is now specified.
+- Fix: Spaces in department filter caused problems with job retrieval.
+- Fix: If no language is specified, the default text is now specified.
 
 = 1.1 =
 
-* Fix: Uncaught TypeError when there is a problem with Careers Site subdomain in the shortcode or no jobs listed. 
+- Fix: Uncaught TypeError when there is a problem with Careers Site subdomain in the shortcode or no jobs listed. 
 
 = 1.0 =
 
-* Initial stable plugin verions. Warm greetings :)
+- Initial stable plugin verions. Warm greetings :)
 
 == Upgrade Notice ==
 
