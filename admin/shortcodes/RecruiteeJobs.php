@@ -204,9 +204,9 @@ class RecruiteeJobs
       $htmlText = $job['description'];
     }
     if ($this->raw) {
-      $rawText = strip_tags($htmlText);
+      $rawText = wpautop(strip_tags($htmlText));
 
-      return wp_trim_words(htmlspecialchars($rawText), $this->preview_size, $this->more);
+      return html_entity_decode(wp_trim_words(htmlspecialchars($rawText), $this->preview_size, $this->more));
     }
 
     $rawText = strip_tags($htmlText, array_keys($this->allowed_html));

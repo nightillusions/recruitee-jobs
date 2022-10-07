@@ -2,10 +2,10 @@
 
 Contributors: nightillusions
 Donate link: https://jordin.eu
-Tags: recruitee, jobs, career, careers page, job lists, job listing, job board, shortcode, page, pages, posts, work
+Tags: jobs, career, careers page, job lists, job listing, job board, shortcode, page, pages, posts, work, recruitee
 Requires at least: 5.8
 Tested up to: 6.0.2
-Stable tag: 1.3
+Stable tag: 1.3.1
 Requires PHP: 7.4
 License: GPLv3 or later License URI: https://www.gnu.org/licenses/gpl-3.0.txt
 
@@ -86,6 +86,10 @@ Or the text color of the title:
 2. Easily display all public jobs from your Recruitee
 
 == Changelog ==
+
+= 1.3.1 =
+
+- Fix: Raw mode has filtered out paragraphs.
 
 = 1.3 =
 
