@@ -8,7 +8,7 @@
   max-width: 100% !important;
 }
 
-.recruitee-jobs-container .recruitee-jobs-errors-container {
+.recruitee-jobs-errors-container {
   width: 100%;
   padding: 2rem 1rem;
   margin: 10px;
@@ -18,12 +18,12 @@
   border-radius: 2rem;
 }
 
-.recruitee-jobs-container .recruitee-jobs-errors {
+.recruitee-jobs-errors {
   width: 100%;
   color: #760000;
 }
 
-.recruitee-jobs-container article.recruitee-job {
+.recruitee-job {
   flex: 0 0 calc(33% - 20px);
   border-radius: 2rem;
   padding: 2rem;
@@ -33,20 +33,20 @@
   text-align: left;
 }
 
-.recruitee-jobs-container article.recruitee-job h3,
-.recruitee-jobs-container article.recruitee-job .recruitee-meta,
-.recruitee-jobs-container article.recruitee-job figure figcaption p {
+.recruitee-job h3,
+.recruitee-job .recruitee-meta,
+.recruitee-job figure figcaption p {
   margin-bottom: 1rem;
 }
 
-.recruitee-jobs-container article.recruitee-job figure {
+.recruitee-job figure {
   display: flex;
   justify-content: center;
   align-items: center;
   align-content: center;
 }
 
-.recruitee-jobs-container article.recruitee-job figure figcaption {
+.recruitee-job figure figcaption {
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
@@ -56,25 +56,25 @@
   margin: 0;
 }
 
-.recruitee-jobs-container a {
+a {
   color: #1999e3;
   text-decoration: none;
   cursor: pointer;
 }
 
-.recruitee-jobs-container a:hover {
+a:hover {
   color: #131c24;
   border-color: #131c24;
 }
 
-.recruitee-jobs-container .recruitee-read-more {
+.recruitee-read-more {
   display: flex;
   margin-top: 20px;
   justify-content: flex-end;
   align-self: flex-end;
 }
 
-.recruitee-jobs-container .recruitee-read-more .recruitee-button {
+.recruitee-read-more .recruitee-button {
   display: inline-flex;
   padding: 10px;
   text-align: center;
@@ -94,36 +94,111 @@
     background-color 0.2s ease, box-shadow 0.2s ease;
 }
 
-.recruitee-jobs-container a.recruitee-button {
+a.recruitee-button {
   border-bottom: 2px solid #fff;
 }
 
-.recruitee-jobs-container a.recruitee-button:hover {
+a.recruitee-button:hover {
   border-bottom: 2px solid #131c24;
 }
 
-.recruitee-jobs-container a.recruitee-button:hover {
+a.recruitee-button:hover {
   color: #fff;
   border: 2px solid #1999e3;
   background-color: #1999e3;
   text-decoration: underline;
 }
 
-.recruitee-jobs-container a.recruitee-button[href]:focus {
+a.recruitee-button[href]:focus {
   color: #fff;
   border: 2px solid #1999e3;
   background-color: #1999e3;
   text-decoration: underline;
+}
+
+.recruitee-jobs-container-list {
+  clear: both;
+  font-size: 0.75em;
+  width: 100%;
+  margin: 0 !important;
+  max-width: 100% !important;
+}
+
+.recruitee-list {
+  counter-reset: li;
+  list-style: none;
+  padding: 0;
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
+}
+
+.recruitee-item a {
+  position: relative;
+  display: block;
+  padding: 0.4em 0.4em 0.4em 1em;
+  margin: 0.5em 1.5em 0.5em 4em;
+  background: #d3d4da;
+  color: #444;
+  text-decoration: none;
+  transition: all 0.3s ease-out;
+}
+
+.recruitee-item a:hover {
+  background: #dcdde1;
+}
+.recruitee-item a:before {
+  content: counter(li);
+  counter-increment: li;
+  position: absolute;
+  left: -3em;
+  top: 50%;
+  margin-top: -1.25em;
+  background: #ffffff;
+  height: 2.5em;
+  width: 2.5em;
+  line-height: 2.5em;
+  text-align: center;
+  font-weight: bold;
+}
+
+.recruitee-item a:after {
+  position: absolute;
+  content: "";
+  border: 0.5em solid transparent;
+  left: -1em;
+  top: 50%;
+  margin-top: -0.5em;
+  transition: all 0.3s ease-out;
+}
+
+.recruitee-item a:hover:after {
+  left: -0.5em;
+  border-left-color: #ffffff;
+}
+
+.recruitee-headline {
+  font-weight: 700;
+}
+
+.recruitee-headline,
+.recruitee-job h3 {
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  -ms-word-break: break-all;
+  word-break: break-word;
+  -ms-hyphens: auto;
+  -moz-hyphens: auto;
+  -webkit-hyphens: auto;
+  hyphens: auto;
 }
 
 @media screen and (max-width: 1024px) {
-  .recruitee-jobs-container article.recruitee-job {
+  .recruitee-job {
     flex: 0 0 calc(50% - 20px);
   }
 }
 
 @media screen and (max-width: 790px) {
-  .recruitee-jobs-container article.recruitee-job {
+  .recruitee-job {
     flex: 0 0 100%;
   }
 }

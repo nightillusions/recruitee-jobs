@@ -4,6 +4,7 @@ class RecruiteeJobs
 {
 
   protected string $your_company;
+  protected string $mode;
   protected string $department;
   protected array $tags = [];
   protected string $jobs_url;
@@ -12,6 +13,7 @@ class RecruiteeJobs
   protected bool $hasPreviewText;
   protected string $more;
   protected bool $raw;
+  protected bool $autop;
   protected bool $show_tags;
   protected bool $show_location;
   protected string $source;
@@ -39,6 +41,7 @@ class RecruiteeJobs
   {
     $attributes = shortcode_atts([
       'company' => '',
+      'mode' => 'tiles',
       'department' => '',
       'tags' => '',
       'url' => '',
@@ -46,13 +49,14 @@ class RecruiteeJobs
       'preview_size' => '55',
       'more' => '...',
       'raw' => false,
-      'show_tags' => false,
-      'show_location' => false,
+      'show_tags' => true,
+      'show_location' => true,
       'source' => '',
     ], $shortcode_attributes);
 
     $tags = (!empty($attributes['tags'])) ? explode(",", esc_attr($attributes['tags'])) : [];
     $company = esc_attr($attributes['company']);
+    $mode = esc_attr($attributes['mode']);
     $department = esc_attr($attributes['department']);
     $jobs_url = esc_attr($attributes['url']);
     $language = esc_attr($attributes['language']);
@@ -65,6 +69,7 @@ class RecruiteeJobs
 
     $this->tags = $tags;
     $this->your_company = $company;
+    $this->mode = $mode;
     $this->department = $department;
     $this->recruitee_url = str_replace("PLACEHOLDER", $company, $this->recruitee_url);
     $this->jobs_url = rtrim($jobs_url, '/');
@@ -73,6 +78,7 @@ class RecruiteeJobs
     $this->hasPreviewText = boolval($this->preview_size);
     $this->more = $more;
     $this->raw = $raw;
+    $this->autop = true;
     $this->show_tags = $show_tags;
     $this->show_location = $show_location;
     $this->source = $source;
@@ -81,7 +87,6 @@ class RecruiteeJobs
 
   public function renderRecruiteeJobs(): void
   {
-
     if ($this->hasErrors()) {
       $this->renderErrors();
 
@@ -92,7 +97,27 @@ class RecruiteeJobs
 
     if (!$jobs || empty($jobs)) {
       esc_html__('No jobs found!', 'recruitee-jobs');
+
+      return;
     }
+
+    switch ($this->mode) {
+      case 'list':
+        $this->renderList($jobs);
+        break;
+      case 'tiles':
+      default:
+        $this->renderTiles($jobs);
+        break;
+    }
+  }
+
+  /**
+   * @since 1.4.0
+   */
+  public function renderTiles(array $jobs): void
+  {
+    echo "<div class='recruitee-jobs-container'>";
 
     foreach ($jobs as $job) {
       echo "<article class='recruitee-job' >";
@@ -125,6 +150,57 @@ class RecruiteeJobs
       echo "</figure>";
       echo "</article>";
     }
+
+    echo "</div>";
+  }
+
+  /**
+   * @since 1.4.0
+   */
+  public function renderList(array $jobs): void
+  {
+    echo "<div class='recruitee-jobs-container-list'>";
+    echo "<ul class='recruitee-list'>";
+
+    foreach ($jobs as $job) {
+      echo "<li class='recruitee-item'>";
+      echo "<a href='" . esc_url($this->getJobURL($job['slug'])) . "' target='_self'>";
+      echo "<span class='recruitee-headline'>" . esc_html($job['title']) . "</span>";
+
+      if ($this->show_location || $this->show_tags) {
+        echo "<span class='recruitee-meta'>";
+        echo " - ";
+        echo "(";
+        if ($this->show_location && $job['location']) {
+          echo "<span class='recruitee-location'>";
+          echo wp_kses(esc_html($job['location']), $this->allowed_html);
+          echo "</span>";
+        }
+        if ($this->show_location && $job['location'] && $this->show_tags && $job['tags']) {
+          echo " | ";
+        }
+        if ($this->show_tags && $job['tags']) {
+          echo "<span class='recruitee-tags'>";
+          echo wp_kses(esc_html(implode(', ', $job['tags'])), $this->allowed_html);
+          echo "</span>";
+        }
+        echo ")";
+        echo " - ";
+        echo "</span>";
+      }
+
+      if ($this->hasPreviewText) {
+        $this->raw = 1;
+        $this->autop = 0;
+        echo wp_kses($this->getTeaserText($job), $this->allowed_html);
+      }
+
+      echo "</a>";
+      echo "</li>";
+    }
+
+    echo "</ul>";
+    echo "</div>";
   }
 
   public function hasErrors(): bool
@@ -204,7 +280,7 @@ class RecruiteeJobs
       $htmlText = $job['description'];
     }
     if ($this->raw) {
-      $rawText = wpautop(strip_tags($htmlText));
+      $rawText = $this->autop ? wpautop(strip_tags($htmlText)) : strip_tags($htmlText);
 
       return html_entity_decode(wp_trim_words(htmlspecialchars($rawText), $this->preview_size, $this->more));
     }
