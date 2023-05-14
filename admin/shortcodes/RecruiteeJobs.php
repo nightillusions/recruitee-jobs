@@ -236,8 +236,14 @@ class RecruiteeJobs
     }
 
     if (!$this->tags) {
-      $response = wp_remote_get(esc_url($apiURL));
-      $json = (array) json_decode(wp_remote_retrieve_body($response), true);
+      $recruitee_jobs = get_transient('rj_recruitee_jobs');
+
+      if (false === $recruitee_jobs) {
+        $response = wp_remote_get(esc_url($apiURL));
+        set_transient('rj_recruitee_jobs', $response, 60 * 60);
+      }
+
+      $json = (array) json_decode(wp_remote_retrieve_body($recruitee_jobs), true);
 
       if ($json && array_key_exists("offers", $json)) {
         return $json['offers'];
@@ -247,8 +253,14 @@ class RecruiteeJobs
     }
 
     foreach ($this->tags as $tag) {
-      $response = wp_remote_get(esc_url("$apiURL&tag=$tag"));
-      $json = (array) json_decode(wp_remote_retrieve_body($response), true);
+      $recruitee_jobs_tags[$tag] = get_transient('rj_recruitee_jobs_' . $tag);
+
+      if ($recruitee_jobs_tags[$tag] && false === $recruitee_jobs_tags[$tag]) {
+        $response = wp_remote_get(esc_url("$apiURL&tag=$tag"));
+        set_transient('rj_recruitee_jobs_' . $tag, $response, 60 * 60);
+      }
+
+      $json = (array) json_decode(wp_remote_retrieve_body($recruitee_jobs_tags[$tag]), true);
       if ($json && array_key_exists("offers", $json)) {
         array_push($jobs, ...$json['offers']);
       }
