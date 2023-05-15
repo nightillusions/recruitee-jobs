@@ -36,6 +36,7 @@ class RecruiteeJobs
   protected string $recruitee_url = 'https://PLACEHOLDER.recruitee.com';
   protected string $api_path = '/api/offers/';
   protected string $external_job_url;
+  protected string $open_local = false;
 
   public function __construct($shortcode_attributes)
   {
@@ -52,6 +53,7 @@ class RecruiteeJobs
       'show_tags' => true,
       'show_location' => true,
       'source' => '',
+      'local' => false,
     ], $shortcode_attributes);
 
     $tags = (!empty($attributes['tags'])) ? explode(",", esc_attr($attributes['tags'])) : [];
@@ -65,6 +67,7 @@ class RecruiteeJobs
     $raw = boolval(esc_attr($attributes['raw']));
     $show_tags = boolval(esc_attr($attributes['show_tags']));
     $show_location = boolval(esc_attr($attributes['show_location']));
+    $open_local = boolval(esc_attr($attributes['local']));
     $source = esc_attr($attributes['source']);
 
     $this->tags = $tags;
@@ -81,6 +84,7 @@ class RecruiteeJobs
     $this->autop = true;
     $this->show_tags = $show_tags;
     $this->show_location = $show_location;
+    $this->open_local = $open_local;
     $this->source = $source;
     $this->external_job_url = empty($jobs_url) ? $this->recruitee_url . '/o' : $jobs_url;
   }
@@ -110,6 +114,10 @@ class RecruiteeJobs
         $this->renderTiles($jobs);
         break;
     }
+  }
+
+  public function renderJob()
+  {
   }
 
   /**
@@ -267,6 +275,20 @@ class RecruiteeJobs
     }
 
     return $jobs;
+  }
+
+  public function getRecruiteeJob(string $id): array
+  {
+    $apiURL = $this->recruitee_url . $this->api_path . $id;
+
+    $response = wp_remote_get(esc_url($apiURL));
+    $json = (array) json_decode(wp_remote_retrieve_body($response), true);
+
+    if ($json && array_key_exists("offer", $json)) {
+      return $json['offer'];
+    }
+
+    return [];
   }
 
   public function getJobURL(string $slug): string
