@@ -1,5 +1,6 @@
 <?php
 
+require_once plugin_dir_path(dirname(__FILE__)) . 'admin/shortcodes/RecruiteeJobsRenderJob.php';
 class RecruiteeJobs
 {
 
@@ -35,7 +36,7 @@ class RecruiteeJobs
   ];
   protected string $recruitee_url = 'https://PLACEHOLDER.recruitee.com';
   protected string $api_path = '/api/offers/';
-  protected string $external_job_url;
+
   protected string $open_local = false;
 
   public function __construct($shortcode_attributes)
@@ -86,7 +87,6 @@ class RecruiteeJobs
     $this->show_location = $show_location;
     $this->open_local = $open_local;
     $this->source = $source;
-    $this->external_job_url = empty($jobs_url) ? $this->recruitee_url . '/o' : $jobs_url;
   }
 
   public function renderRecruiteeJobs(): void
@@ -104,111 +104,29 @@ class RecruiteeJobs
 
       return;
     }
+    $rj_atts = [
+      "recruitee_url" => $this->recruitee_url,
+      "jobs_url" => $this->jobs_url,
+      "source" => $this->source,
+      'language' => $this->language,
+      'more' => $this->more,
+      'preview_size' => $this->preview_size,
+      'show_location' => $this->show_location,
+      'show_tags' => $this->show_tags,
+      'hasPreviewText' => $this->hasPreviewText,
+      'raw' => $this->raw,
+    ];
+    $rj = new RecruiteeRenderJob($rj_atts);
 
     switch ($this->mode) {
       case 'list':
-        $this->renderList($jobs);
+        $rj->renderList($jobs);
         break;
       case 'tiles':
       default:
-        $this->renderTiles($jobs);
+        $rj->renderTiles($jobs);
         break;
     }
-  }
-
-  public function renderJob()
-  {
-  }
-
-  /**
-   * @since 1.4.0
-   */
-  public function renderTiles(array $jobs): void
-  {
-    echo "<div class='recruitee-jobs-container'>";
-
-    foreach ($jobs as $job) {
-      echo "<article class='recruitee-job' >";
-      echo "<figure class='no-image'>";
-      echo "<figcaption>";
-      echo "<a href='" . esc_url($this->getJobURL($job['slug'])) . "' target='_self'>";
-      echo "<h3>" . esc_html($job['title']) . "</h3>";
-      echo "</a>";
-      if ($this->show_location || $this->show_tags) {
-        echo "<div class='recruitee-meta'>";
-        if ($this->show_location && $job['location']) {
-          echo "<div class='recruitee-location'>";
-          echo wp_kses(esc_html($job['location']), $this->allowed_html);
-          echo "</div>";
-        }
-        if ($this->show_tags && $job['tags']) {
-          echo "<div class='recruitee-tags'>";
-          echo wp_kses(esc_html(implode(', ', $job['tags'])), $this->allowed_html);
-          echo "</div>";
-        }
-        echo "</div>";
-      }
-      if ($this->hasPreviewText) {
-        echo wp_kses($this->getTeaserText($job), $this->allowed_html);
-      }
-      echo "<div class='recruitee-read-more'>";
-      echo "<a class='recruitee-button' href='" . esc_url($this->getJobURL($job['slug'])) . "' target='_self'>" . esc_html__('Read more', 'recruitee-jobs') . "</a>";
-      echo "</div>";
-      echo "</figcaption>";
-      echo "</figure>";
-      echo "</article>";
-    }
-
-    echo "</div>";
-  }
-
-  /**
-   * @since 1.4.0
-   */
-  public function renderList(array $jobs): void
-  {
-    echo "<div class='recruitee-jobs-container-list'>";
-    echo "<ul class='recruitee-list'>";
-
-    foreach ($jobs as $job) {
-      echo "<li class='recruitee-item'>";
-      echo "<a href='" . esc_url($this->getJobURL($job['slug'])) . "' target='_self'>";
-      echo "<span class='recruitee-headline'>" . esc_html($job['title']) . "</span>";
-
-      if ($this->show_location || $this->show_tags) {
-        echo "<span class='recruitee-meta'>";
-        echo " - ";
-        echo "(";
-        if ($this->show_location && $job['location']) {
-          echo "<span class='recruitee-location'>";
-          echo wp_kses(esc_html($job['location']), $this->allowed_html);
-          echo "</span>";
-        }
-        if ($this->show_location && $job['location'] && $this->show_tags && $job['tags']) {
-          echo " | ";
-        }
-        if ($this->show_tags && $job['tags']) {
-          echo "<span class='recruitee-tags'>";
-          echo wp_kses(esc_html(implode(', ', $job['tags'])), $this->allowed_html);
-          echo "</span>";
-        }
-        echo ")";
-        echo " - ";
-        echo "</span>";
-      }
-
-      if ($this->hasPreviewText) {
-        $this->raw = 1;
-        $this->autop = 0;
-        echo wp_kses($this->getTeaserText($job), $this->allowed_html);
-      }
-
-      echo "</a>";
-      echo "</li>";
-    }
-
-    echo "</ul>";
-    echo "</div>";
   }
 
   public function hasErrors(): bool
@@ -289,38 +207,5 @@ class RecruiteeJobs
     }
 
     return [];
-  }
-
-  public function getJobURL(string $slug): string
-  {
-    $tracking = $this->str_contains($this->external_job_url, '?') ? "&source=$this->source" : "?source=$this->source";
-    return !empty($this->source) ? $this->external_job_url . '/' . $slug . $tracking : $this->external_job_url . '/' . $slug;
-  }
-
-  private function str_contains($haystack, $needle): bool
-  {
-    if (!function_exists('str_contains')) {
-      return $needle !== '' && mb_strpos($haystack, $needle) !== false;
-    } else {
-      return str_contains($haystack, $needle);
-    }
-  }
-
-  public function getTeaserText(array $job): string
-  {
-    if (!empty($this->language)) {
-      $htmlText = $job['translations'][$this->language]['description'];
-    } else {
-      $htmlText = $job['description'];
-    }
-    if ($this->raw) {
-      $rawText = $this->autop ? wpautop(strip_tags($htmlText)) : strip_tags($htmlText);
-
-      return html_entity_decode(wp_trim_words(htmlspecialchars($rawText), $this->preview_size, $this->more));
-    }
-
-    $rawText = strip_tags($htmlText, array_keys($this->allowed_html));
-
-    return force_balance_tags(html_entity_decode(wp_trim_words(htmlspecialchars($rawText), $this->preview_size, $this->more)));
   }
 }
