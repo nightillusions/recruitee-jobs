@@ -1,12 +1,14 @@
 <?php
 require_once plugin_dir_path(dirname(__FILE__)) . 'includes/RecruiteeLoader.php';
 require_once plugin_dir_path(dirname(__FILE__)) . 'includes/RecruiteeI18n.php';
+require_once plugin_dir_path(dirname(__FILE__)) . 'includes/RecruiteeCustomRoute.php';
 require_once plugin_dir_path(dirname(__FILE__)) . 'admin/RecruiteeAdmin.php';
 require_once plugin_dir_path(dirname(__FILE__)) . 'public/RecruiteePublic.php';
 
 class RecruiteePlugin
 {
   protected RecruiteeLoader $loader;
+  protected RecruiteeCustomRoute $custom_route;
   protected string $plugin_name;
   protected string $version;
 
@@ -19,10 +21,16 @@ class RecruiteePlugin
     }
     $this->plugin_name = 'recruitee-jobs';
 
+    $this->addCustomRoute();
     $this->loadDependencies();
     $this->setLocale();
     $this->defineAdminHooks();
     $this->definePublicHooks();
+  }
+
+  private function addCustomRoute()
+  {
+    $this->custom_route = new RecruiteeCustomRoute('recruitee-jobs/(.+?)/?$', array('job'), 'public/RecruiteeJobTemplate.php', true);
   }
 
   private function loadDependencies()

@@ -1,5 +1,8 @@
 <?php
 
+require_once plugin_dir_path(dirname(__FILE__)) . 'admin/shortcodes/RecruiteeJobsRenderJob.php';
+require_once plugin_dir_path(dirname(__FILE__)) . 'admin/helpers/getJobURL.php';
+
 class RecruiteePublic
 {
   private string $plugin_name;
@@ -9,12 +12,6 @@ class RecruiteePublic
   {
     $this->plugin_name = $plugin_name;
     $this->version     = $version;
-
-    $this->loadShortcodes();
-  }
-
-  public function loadShortcodes()
-  {
   }
 
   public function enqueueStyles()
@@ -29,9 +26,17 @@ class RecruiteePublic
 
   public function parseRequest()
   {
-    if (isset($_GET['recruitee-jobs']) && $_SERVER["REQUEST_URI"] == '/recruitee-jobs') {
-      echo "<h1>TEST</h1>";
-      exit();
+    echo "HELLO";
+    var_dump("HELLO");
+    if (isset($_GET['job']) && str_contains($_SERVER["REQUEST_URI"], '/recruitee-jobs')) {
+      $jobID = !empty($_GET['job']) ? absint($_GET['job']) : 0;
+      $recruitee_url = !empty($_GET['recruitee_url']) ? urldecode_deep($_GET['recruitee_url']) : 0;
+      $api_path = !empty($_GET['api_path']) ? urldecode_deep($_GET['api_path']) : 0;
+
+      add_filter('the_content', function () use ($jobID, $recruitee_url, $api_path) {
+        $job = getRecruiteeJob($jobID, $recruitee_url, $api_path);
+        var_dump($job);
+      }, 1);
     }
   }
 }

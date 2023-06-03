@@ -1,6 +1,6 @@
 <?php
 
-require_once plugin_dir_path(dirname(__FILE__)) . 'admin/helpers/getJobURL.php';
+require_once plugin_dir_path(dirname(__FILE__)) . 'helpers/getJobURL.php';
 
 class RecruiteeRenderJob
 {
@@ -9,12 +9,18 @@ class RecruiteeRenderJob
   protected string $source;
   protected string $language;
   protected string $more;
+  protected string $api_path;
+  protected string $recruitee_url;
+  protected string $jobs_url;
   protected bool $show_location;
   protected bool $show_tags;
   protected bool $hasPreviewText;
   protected bool $raw;
   protected bool $autop;
+  protected bool $open_local;
   protected int $preview_size;
+  protected int $job_id;
+  protected $getJob;
   protected array $allowed_html = [
     'a' => [
       'href' => [],
@@ -41,10 +47,15 @@ class RecruiteeRenderJob
       'language' => '',
       'more' => '...',
       'preview_size' => '55',
+      'api_path' => '',
       'show_location' => true,
       'show_tags' => true,
       'hasPreviewText' => true,
+      'open_local' => true,
       'raw' => false,
+      'autop' => true,
+      'getJob' => null,
+      'job_id' => 0
     ], $render_attributes);
 
     $this->external_job_url = empty($attributes['jobs_url']) ? $attributes['recruitee_url'] . '/o' : $attributes['jobs_url'];
@@ -57,6 +68,12 @@ class RecruiteeRenderJob
     $this->language = $attributes['language'];
     $this->preview_size = $attributes['preview_size'];
     $this->more = $attributes['more'];
+    $this->getJob = $attributes['getJob'];
+    $this->open_local = $attributes['open_local'];
+    $this->api_path = $attributes['api_path'];
+    $this->recruitee_url = $attributes['recruitee_url'];
+    $this->jobs_url = $attributes['jobs_url'];
+    $this->job_id = $attributes['job_id'];
   }
 
   /**
@@ -70,7 +87,7 @@ class RecruiteeRenderJob
       echo "<article class='recruitee-job' >";
       echo "<figure class='no-image'>";
       echo "<figcaption>";
-      echo "<a href='" . esc_url(getJobURL($job['slug'], $this->external_job_url, $this->source)) . "' target='_self'>";
+      echo "<a href='" . $this->getSingleLink($job) . "' target='_self'>";
       echo "<h3>" . esc_html($job['title']) . "</h3>";
       echo "</a>";
       if ($this->show_location || $this->show_tags) {
@@ -101,6 +118,12 @@ class RecruiteeRenderJob
     echo "</div>";
   }
 
+
+  public function getSingleLink(array $job): string
+  {
+    return $this->open_local ? esc_url(site_url('/recruitee-job') . '/' . $job['id'] . '/?url=' . urlencode_deep($this->recruitee_url) . '&api=' . urlencode_deep($this->api_path)) : esc_url($this->getJobURL($job['slug'], $this->external_job_url, $this->source));
+  }
+
   /**
    * @since 1.4.0
    */
@@ -109,9 +132,11 @@ class RecruiteeRenderJob
     echo "<div class='recruitee-jobs-container-list'>";
     echo "<ul class='recruitee-list'>";
 
+
+
     foreach ($jobs as $job) {
       echo "<li class='recruitee-item'>";
-      echo "<a href='" . esc_url(getJobURL($job['slug'], $this->external_job_url, $this->source)) . "' target='_self'>";
+      echo "<a href='" . $this->getSingleLink($job) . "' target='_self'>";
       echo "<span class='recruitee-headline'>" . esc_html($job['title']) . "</span>";
 
       if ($this->show_location || $this->show_tags) {
@@ -168,7 +193,9 @@ class RecruiteeRenderJob
     return force_balance_tags(html_entity_decode(wp_trim_words(htmlspecialchars($rawText), $this->preview_size, $this->more)));
   }
 
-  public function renderJob(int $id)
+  function getJobURL(string $slug, string $external_job_url, string $source): string
   {
+    $tracking = str_contains($external_job_url, '?') ? "&source=$source" : "?source=$source";
+    return !empty($source) ? $external_job_url . '/' . $slug . $tracking : $external_job_url . '/' . $slug;
   }
 }

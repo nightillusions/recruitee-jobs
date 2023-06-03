@@ -1,6 +1,6 @@
 <?php
 
-require_once plugin_dir_path(dirname(__FILE__)) . 'admin/shortcodes/RecruiteeJobsRenderJob.php';
+require_once plugin_dir_path(dirname(__FILE__)) . 'shortcodes/RecruiteeJobsRenderJob.php';
 class RecruiteeJobs
 {
 
@@ -37,7 +37,8 @@ class RecruiteeJobs
   protected string $recruitee_url = 'https://PLACEHOLDER.recruitee.com';
   protected string $api_path = '/api/offers/';
 
-  protected string $open_local = false;
+  protected bool $open_local = false;
+  public RecruiteeRenderJob $rj;
 
   public function __construct($shortcode_attributes)
   {
@@ -87,6 +88,22 @@ class RecruiteeJobs
     $this->show_location = $show_location;
     $this->open_local = $open_local;
     $this->source = $source;
+
+    $rj_atts = [
+      'recruitee_url' => $this->recruitee_url,
+      'jobs_url' => $this->jobs_url,
+      'source' => $this->source,
+      'language' => $this->language,
+      'more' => $this->more,
+      'preview_size' => $this->preview_size,
+      'show_location' => $this->show_location,
+      'show_tags' => $this->show_tags,
+      'hasPreviewText' => $this->hasPreviewText,
+      'raw' => $this->raw,
+      'open_local' => $this->open_local,
+      'api_path' => $this->api_path
+    ];
+    $this->rj = new RecruiteeRenderJob($rj_atts);;
   }
 
   public function renderRecruiteeJobs(): void
@@ -104,27 +121,14 @@ class RecruiteeJobs
 
       return;
     }
-    $rj_atts = [
-      "recruitee_url" => $this->recruitee_url,
-      "jobs_url" => $this->jobs_url,
-      "source" => $this->source,
-      'language' => $this->language,
-      'more' => $this->more,
-      'preview_size' => $this->preview_size,
-      'show_location' => $this->show_location,
-      'show_tags' => $this->show_tags,
-      'hasPreviewText' => $this->hasPreviewText,
-      'raw' => $this->raw,
-    ];
-    $rj = new RecruiteeRenderJob($rj_atts);
 
     switch ($this->mode) {
       case 'list':
-        $rj->renderList($jobs);
+        $this->rj->renderList($jobs);
         break;
       case 'tiles':
       default:
-        $rj->renderTiles($jobs);
+        $this->rj->renderTiles($jobs);
         break;
     }
   }
@@ -193,19 +197,5 @@ class RecruiteeJobs
     }
 
     return $jobs;
-  }
-
-  public function getRecruiteeJob(string $id): array
-  {
-    $apiURL = $this->recruitee_url . $this->api_path . $id;
-
-    $response = wp_remote_get(esc_url($apiURL));
-    $json = (array) json_decode(wp_remote_retrieve_body($response), true);
-
-    if ($json && array_key_exists("offer", $json)) {
-      return $json['offer'];
-    }
-
-    return [];
   }
 }

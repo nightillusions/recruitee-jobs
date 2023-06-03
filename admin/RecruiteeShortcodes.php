@@ -8,6 +8,7 @@ class RecruiteeShortcodes
 
   private string $plugin_name;
   private string $version;
+  public RecruiteeJobs $recruitee;
 
   public function __construct(string $plugin_name, string $version)
   {
@@ -25,11 +26,11 @@ class RecruiteeShortcodes
     });
 
     add_shortcode($this->plugin_name, function ($shortcode_attributes) {
-      $recruitee = new RecruiteeJobs($shortcode_attributes);
+      $this->recruitee = new RecruiteeJobs($shortcode_attributes);
 
       ob_start();
 
-      $recruitee->renderRecruiteeJobs();
+      $this->recruitee->renderRecruiteeJobs();
 
       return ob_get_clean();
     });

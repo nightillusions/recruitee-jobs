@@ -72,4 +72,23 @@ function runRecruiteePlugin()
   $plugin->run();
 }
 
+/* add_action('parse_request', function () {
+  if (isset($_GET['job']) && str_contains($_SERVER["REQUEST_URI"], '/recruitee-jobs')) {
+    $jobID = !empty($_GET['job']) ? absint($_GET['job']) : 0;
+    $recruitee_url = !empty($_GET['recruitee_url']) ? urldecode_deep($_GET['recruitee_url']) : 0;
+    $api_path = !empty($_GET['api_path']) ? urldecode_deep($_GET['api_path']) : 0;
+
+    add_filter('the_content', function () use ($jobID, $recruitee_url, $api_path) {
+      $job = getRecruiteeJob($jobID, $recruitee_url, $api_path);
+      var_dump($job);
+    }, 99);
+  }
+});
+
+add_action('the_content', function () use ($jobID, $recruitee_url, $api_path) {
+  $job = getRecruiteeJob($jobID, $recruitee_url, $api_path);
+  var_dump($job);
+  echo $job;
+}); */
+
 runRecruiteePlugin();
