@@ -30,7 +30,34 @@ class RecruiteePlugin
 
   private function addCustomRoute()
   {
-    $this->custom_route = new RecruiteeCustomRoute('recruitee-jobs/(.+?)/?$', array('job'), 'public/RecruiteeJobTemplate.php', true);
+    add_action('parse_request', function () {
+      if (/* isset($_GET['job']) &&  */str_contains($_SERVER["REQUEST_URI"], '/recruitee-jobs')) {
+
+        $tokens = explode('/', $_SERVER["REQUEST_URI"]);
+        $jobID = $tokens[sizeof($tokens) - 2]; #!empty($_GET['job']) ? absint($_GET['job']) : 0;
+        $recruitee_url = !empty($_GET['url']) ? urldecode_deep($_GET['url']) : 0;
+        $api_path = !empty($_GET['api']) ? urldecode_deep($_GET['api']) : 0;
+
+        add_filter('the_content', function ($content) use ($jobID, $recruitee_url, $api_path) {
+          $apiURL = $recruitee_url . $api_path . $jobID;
+
+          var_dump($apiURL);
+
+          $response = wp_remote_get(esc_url($apiURL));
+          $json = (array) json_decode(wp_remote_retrieve_body($response), true);
+
+          var_dump($response);
+          if ($json && array_key_exists("offer", $json)) {
+            return $content . $json['offer'];
+          }
+
+          return $content;
+          #$job = getRecruiteeJob($jobID, $recruitee_url, $api_path);
+
+        }, 1);
+      }
+    });
+    #$this->custom_route = new RecruiteeCustomRoute('recruitee-jobs/(.+?)/?$', array('job'), 'public/RecruiteeJobTemplate.php', true);
   }
 
   private function loadDependencies()

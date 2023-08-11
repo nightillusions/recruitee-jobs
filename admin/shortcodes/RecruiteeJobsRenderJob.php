@@ -121,7 +121,7 @@ class RecruiteeRenderJob
 
   public function getSingleLink(array $job): string
   {
-    return $this->open_local ? esc_url(site_url('/recruitee-job') . '/' . $job['id'] . '/?url=' . urlencode_deep($this->recruitee_url) . '&api=' . urlencode_deep($this->api_path)) : esc_url($this->getJobURL($job['slug'], $this->external_job_url, $this->source));
+    return $this->open_local ? esc_url(site_url('/recruitee-jobs') . '/' . $job['id'] . '/?url=' . urlencode_deep($this->recruitee_url) . '&api=' . urlencode_deep($this->api_path)) : esc_url($this->getJobURL($job['slug'], $this->external_job_url, $this->source));
   }
 
   /**
