@@ -4,8 +4,8 @@ Contributors: nightillusions
 Donate link: https://jordin.eu
 Tags: career, careers page, job lists, job listing, job board, shortcode, page, pages, posts, work, recruitee
 Requires at least: 5.8
-Tested up to: 6.0.2
-Stable tag: 1.4.0
+Tested up to: 6.3.0
+Stable tag: 1.4.1
 Requires PHP: 7.4
 License: GPLv3 or later License URI: https://www.gnu.org/licenses/gpl-3.0.txt
 
